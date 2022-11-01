@@ -6,11 +6,15 @@ import com.projects.todoapp.mapper.TaskDTOToTaskEntityMapper;
 import com.projects.todoapp.persistence.entity.TaskEntity;
 import com.projects.todoapp.persistence.entity.TaskStatus;
 import com.projects.todoapp.persistence.repository.TaskRepository;
+import org.apache.commons.logging.Log;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Primary
 @Service
@@ -36,8 +40,17 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<TaskEntity> getTaskByTaskStatus(TaskStatus status) {
-        return this.taskRepository.findAllByTaskStatus(status);
+    public List<TaskEntity> getTaskByTaskStatus(String status) {
+        List<TaskStatus> allStatus = List.of(TaskStatus.values());
+
+
+        Optional<TaskStatus> foundStatus = allStatus.stream()
+                .filter(taskStatus -> taskStatus.equals(status))
+                .findFirst();
+
+        return this.taskRepository.findAllByTaskStatus(
+                foundStatus.orElseThrow(() -> new TaskNotFoundException("Invalid Status provided"))
+        ).get();
     }
 
     @Transactional

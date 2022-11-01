@@ -28,7 +28,7 @@ public class TaskController {
     }
 
     @GetMapping("/status/{status}")
-    public ResponseEntity<List<TaskEntity>> getTasksByStatus(@PathVariable(name = "status") TaskStatus status) {
+    public ResponseEntity<List<TaskEntity>> getTasksByStatus(@PathVariable(name = "status") String status) {
         List<TaskEntity> tasks = taskService.getTaskByTaskStatus(status);
 
         return ResponseEntity.status(HttpStatus.OK).body(tasks);

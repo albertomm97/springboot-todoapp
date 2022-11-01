@@ -14,8 +14,8 @@ import javax.validation.ConstraintViolationException;
 @RestControllerAdvice
 public class TaskExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<AppError> handleGlobalException(Exception exception) {
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<AppError> handleGlobalException(RuntimeException exception) {
         return resolveError(HttpStatus.BAD_REQUEST, exception);
     }
 
