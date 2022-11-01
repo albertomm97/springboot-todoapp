@@ -1,6 +1,7 @@
 package com.projects.todoapp.service;
 
 import com.projects.todoapp.dto.TaskDTO;
+import com.projects.todoapp.exceptions.TaskNotFoundException;
 import com.projects.todoapp.mapper.TaskDTOToTaskEntityMapper;
 import com.projects.todoapp.persistence.entity.TaskEntity;
 import com.projects.todoapp.persistence.entity.TaskStatus;
@@ -42,12 +43,14 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     @Override
     public void finishTask(Long id) {
+        this.taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException("Invalid ID provided"));
         this.taskRepository.setTaskStatusToFinished(id);
     }
 
     @Transactional
     @Override
     public void deleteTask(Long id) {
-       this.taskRepository.deleteById(id);
+        this.taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException("Invalid ID provided"));
+        this.taskRepository.deleteById(id);
     }
 }
